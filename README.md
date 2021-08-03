@@ -1,39 +1,68 @@
-# Ruby on Rails Blog
+# API Blog
 
-Необходимо построить API приложение с использование Ruby On Rails для чтения и написания статей в блог. Приложение **НЕ должно рендерить html**, а только получать запросы и отвечать в формате JSON. Рекомендую ознакомиться с Rails Api Mode
+This README would normally document whatever steps are necessary to get the
+application up and running.
 
-Версия **ruby** не ниже **2.7**, версия **Rails** - не ниже **6.0**. Гемы можно использовать любые. Код приложения должен храниться в git репозитории.
+Things you may want to cover:
 
-Должна быть возможность зарегистрироваться, войти в систему, создать статью, оставить комментарий под статьей, получить список статей, просмотреть конкретную статью, получить комментарии определенной статьи. 
+* Ruby version 3.0.0
+* Rails version 6.1.4
 
-## Вход/регистрация
-Должна быть возможность регистрации, набор полей: email, password. 
+##### Registration:
+````
+POST /api/v1/sign_up
+params {"email": "my.mail@com", "password": "without_secure_requirements"}
+receive <secure_token>
+````
 
-- Должна быть валидация на формат email’а и такой имейл не должен уже быть зарегистрирован в системе, пароль - не менее 6 символов.
+````
+POST /api/v1/sign_in
+params {"email": "my.mail@com", "password": "<your_password>"}
+put at request {Token <secure_token>} to Authorization header 
+````
+##### Article:
+````
+POST /api/v1/articles
+params {"title": "My Title", "body": "<your_text_body>", "category": nil}
+put at request {Token <secure_token>} to Authorization header 
+<category> is optional parameter 
+````
 
-- Вход осуществляется по email + password.
+````
+GET /api/v1/articles
+get a list of all articles
+````
 
-## Статьи
-Должны содержать поля: заголовок, тело статьи, категория, дата публикации.
+````
+GET /api/v1/articles/<id>
+get article by <id>
+````
 
-- Заголовок не должен быть пустым и не может быть длиннее 100 символов. Тело статьи не может быть пустым. API не должно позволять незарегистрированным пользователям создавать статьи.
+````
+DELETE /api/v1/articles/<id>
+put at request {Token <secure_token>} to Authorization header 
+destroy article by <id>
+````
 
-- Должна быть возможность получить список всех статей отсортированный по дате (от новых к старым), а также возможность просмотреть все статьи определенного автора или с определенной категорией аналогично отсортированных по дате. 
+##### Comments:
+````
+GET /api/v1/articles/:article_id/comments
+get a list of all comments
+````
 
-- При получении списка статей API должно возвращать полный заголовок и первые 500 символов статьи, категорию статьи, дату публикации, количество комментариев. Если статья длиннее - после 500 символов должны возвращаться ‘...’
+````
+POST /api/v1/articles/:article_id/comments
+put at request {Token <secure_token>} to Authorization header
+{"body": "<your_comment>"}
+````
 
-- Должна быть возможность запросить конкретную статью - в таком случае возвращается заголовок, полное тело, категория, дата публикации.
+````
+GET /api/v1/articles/:article_id/comments/:id
+get current comment by <id>
+````
 
-- Должна быть возможность удалить статью и позволять это делать только автору.
-
-## Комментарии
-- API должно позволять зарегистрированную пользователю оставить комментарий к статье. Комментарий не должен быть пустым и не должен превышать 1000 символов.
-
-- Должна быть возможность получить комментарии к определенной статье.
-
-- API должно иметь возможность позволить удалить комментарий его автору.
-
-
-
-
-
+````
+DELETE /api/v1/articles/:article_id/comments/:id
+put at request {Token <secure_token>} to Authorization header
+delete current comment by <id> by those user
+````
