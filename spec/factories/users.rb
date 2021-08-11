@@ -5,7 +5,7 @@ FactoryBot.define do
     email { 'email@example.com' }
     password { '123456' }
 
-    after :create do |obj|
+    after :create do |obj, _options|
       obj.access_tokens.create { GenerateTokenService.call }
     end
   end

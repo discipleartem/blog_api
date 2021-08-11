@@ -5,8 +5,8 @@ module Api
     module ArticleSearchConcern
       extend ActiveSupport::Concern
 
-      included do
-      end
+      # included do
+      # end
 
       private
 

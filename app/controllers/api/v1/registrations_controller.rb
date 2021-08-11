@@ -4,8 +4,8 @@ module Api
   module V1
     class RegistrationsController < BaseController
       def create
-        user = User.new(registration_params)
-        render json: user, serializer: Api::V1::UserSerializer, status: :created if user.save!
+        @current_user = User.new(registration_params)
+        @current_user.save! && render(json: @current_user, serializer: Api::V1::UserSerializer, status: :created)
       end
 
       private

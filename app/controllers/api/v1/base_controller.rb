@@ -3,6 +3,7 @@
 module Api
   module V1
     class BaseController < ApplicationController
+      include RescueableConcern
       PATTERN = 'Token '
       # attr_reader :current_user
 

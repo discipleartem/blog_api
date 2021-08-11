@@ -3,17 +3,18 @@
 require 'acceptance_helper'
 
 RSpec.describe '/api/v1/sign_in', type: :request do
-  let(:user) { create :user }
+  let!(:user) { create :user }
   let(:params) do
     {
-      email: user.email,
-      password: user.password
-    }
+      session: {
+        email: user.email,
+        password: user.password
+      }
+    }.as_json
   end
   let(:headers) do
     { 'Accept' => 'application/json', 'Content' => 'application/json; charset=utf-8' }
   end
-  let(:raw_post) { params.to_json }
 
   context 'Login user' do
     it 'with good params' do
@@ -23,8 +24,8 @@ RSpec.describe '/api/v1/sign_in', type: :request do
     end
 
     # it 'with wrong parameters' do
-    #   post '/api/v1/sign_up', params: { registration: { password: Faker::Internet.password } }, headers: headers
-    #   expect(user.save!).to raise_error("Validation failed: Email can't be blank, Email enter valid email")
+    #   post '/api/v1/sign_in', params: { session: { password: user.password } }, headers: headers
+    #   expect { user.blank? }.to raise_error(StandardError)
     # end
   end
 end
